@@ -37,6 +37,7 @@ class SymmetricMatrix
 			return 0;
 	}
 
+
 	void calculationCS(int i, int j, double& c, double& s)
 	{
 		double p = 2 * elements[i][j];
@@ -74,6 +75,55 @@ class SymmetricMatrix
 		return T;
 	}
 
+	double** initializationA()
+	{
+		double** A = new double* [size];
+		for (int i = 0; i < size; i++)
+			A[i] = new double[size];
+
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				A[i][j] = elements[i][j];
+
+		return A;
+
+	}
+
+	double** multiplicationRightTij(double** matr, double c, double s, int i, int j)
+	{
+		double** result = new double* [size];
+		for (int i = 0; i < size; i++)
+			result[i] = new double[size];
+
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				result[i][j] = matr[i][j];
+
+		for (int l = 0; l < size; l++)
+		{
+			result[l][i] = c * matr[l][i] + s * matr[l][j];
+			result[l][j] = -s * matr[l][i] + c * matr[l][j];
+		}
+	}
+
+	double** multiplicationLeftTijTransposed(double** matr, double c, double s, int i, int j)
+	{
+		double** result = new double* [size];
+		for (int i = 0; i < size; i++)
+			result[i] = new double[size];
+
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				result[i][j] = matr[i][j];
+
+		for (int m = 0; m < size; m++)
+		{
+			result[i][m] = c * matr[i][m] + s * matr[j][m];
+			result[j][m] = -s * matr[i][m] + c * matr[j][m];
+		}
+
+		return result;
+	}
 public:
 
 	SymmetricMatrix()
@@ -128,7 +178,7 @@ public:
 				std::cin >> elements[i][j];
 	}
 
-	void absMax(int& _i, int& _j)
+	double absMax(int& _i, int& _j)
 	{
 		double max = -1;
 		for (int i = 0; i < size; i++)
@@ -139,15 +189,20 @@ public:
 					_i = i;
 					_j = j;
 				}
+
+		return max;
 	}
 
 	double** eigenvectors(double e, int M, int& K, double* a, double& r)
 	{
 		double** T = initializationT0();
+		double** A = initializationA();
+		int iterator = 0;
+		int i, j;
+		double E = absMax(i, j);
 
-		for (int i = 0; i < M; i++)
+		while (iterator<M && e<E)
 		{
-
 		}
 	}
 };
