@@ -102,6 +102,8 @@ class SymmetricMatrix
 			result[l][i] = c * matr[l][i] + s * matr[l][j];
 			result[l][j] = -s * matr[l][i] + c * matr[l][j];
 		}
+
+		return result;
 	}
 
 	double** multiplicationLeftTijTransposed(double** matr, double c, double s, int i, int j)
@@ -140,7 +142,7 @@ class SymmetricMatrix
 			result[i] = new double[size];
 
 		double** leftPart = new double* [size];
-		for (int i = 0; i, size; i++)
+		for (int i = 0; i < size; i++)
 			leftPart[i] = new double[size];
 
 		double** rightPart = new double* [size];
@@ -199,6 +201,16 @@ public:
 				k++;
 			}
 	}
+
+	SymmetricMatrix(double** matr, int size)
+	{
+		allocateCells(size);
+
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				elements[i][j] = matr[i][j];
+	}
+
 
 	~SymmetricMatrix()
 	{
