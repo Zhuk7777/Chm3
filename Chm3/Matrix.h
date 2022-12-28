@@ -51,7 +51,7 @@ class SymmetricMatrix
 		{
 			double r = abs(q) / (2 * d);
 			c = sqrt(0.5 + r);
-			s = sqrt(0.5 - r * sign(p * q));
+			s = sqrt(0.5 - r)*sign(p * q);
 		}
 	}
 
@@ -173,6 +173,32 @@ class SymmetricMatrix
 	
 	}
 
+	void print(double** matr)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			std::cout << "\n";
+			for (int j = 0; j < size; j++)
+				std::cout << matr[i][j] << " ";
+		}
+		std::cout << "\n";
+	}
+
+	double absMax(double** matr, int& _i, int& _j)
+	{
+		double max = -1;
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				if (i!=j&&abs(matr[i][j]) > max)
+				{
+					max = abs(matr[i][j]);
+					_i = i;
+					_j = j;
+				}
+
+		return max;
+	}
+
 public:
 
 	SymmetricMatrix()
@@ -249,21 +275,6 @@ public:
 
 	}
 
-	double absMax(int& _i, int& _j)
-	{
-		double max = -1;
-		for (int i = 0; i < size; i++)
-			for (int j = 0; j < i; j++)
-				if (abs(elements[i][j]) > max)
-				{
-					max = abs(elements[i][j]);
-					_i = i;
-					_j = j;
-				}
-
-		return max;
-	}
-
 	double** eigenvectors(double e, int M, int& K, double* a, double& r)
 	{
 		double** T = initializationT0();
@@ -271,16 +282,18 @@ public:
 		int iterator = 0;
 		int i, j;
 		double c, s;
-		double E = absMax(i, j);
+		double E = absMax(A, i, j);
 
 		while (iterator<M && e<E)
 		{
-			E = absMax(i, j);
+			E = absMax(A, i, j);
 			calculationCS(i, j, c, s);
 			A = multiplicationLeftTijTransposed(A, c, s, i, j);
+			//print(A);
 			A = multiplicationRightTij(A, c, s, i, j);
-			T = multiplicationLeftTijTransposed(T, c, s, i, j);
+			T = multiplicationRightTij(T, c, s, i, j);
 			iterator++;
+			//print(A);
 
 		}
 
