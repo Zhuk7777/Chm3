@@ -1,8 +1,6 @@
 #pragma once
 #include <iostream>
 
-using namespace std;
-
 class SymmetricMatrix
 {
 	double** elements;
@@ -124,6 +122,55 @@ class SymmetricMatrix
 
 		return result;
 	}
+
+	void creatingVectorOfEigenvalues(double** A, double* a)
+	{
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				if (i == j)
+					a[i] = A[i][j];
+
+
+	}
+
+	double measureOfAccuracy(double**A,double**T)
+	{
+		double** result = new double*[size];
+		for (int i = 0; i < size; i++)
+			result[i] = new double[size];
+
+		double** leftPart = new double* [size];
+		for (int i = 0; i, size; i++)
+			leftPart[i] = new double[size];
+
+		double** rightPart = new double* [size];
+		for (int i = 0; i < size; i++)
+			rightPart[i] = new double[size];
+
+		double max = -1;
+
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+			{
+				leftPart[i][j] = T[i][j] * A[j][j];
+				if (j <= i)
+				{
+					rightPart[i][j] = 0;
+					for (int k = 0; k < size; k++)
+						rightPart[i][j] += elements[i][k] * T[k][j];
+
+					rightPart[j][i] = rightPart[i][j];
+				}
+
+				result[i][j] = leftPart[i][j] - rightPart[i][j];
+				if (abs(result[i][j]) > max)
+					max = abs(result[i][j]);
+			}
+
+		return max;
+	
+	}
+
 public:
 
 	SymmetricMatrix()
@@ -178,6 +225,18 @@ public:
 				std::cin >> elements[i][j];
 	}
 
+	void printMatrix()
+	{
+		for (int i = 0; i < size; i++)
+		{
+			std::cout << "\n";
+			for (int j = 0; j < size; j++)
+				std::cout << elements[i][j] << " ";
+		}
+		std::cout << "\n";
+
+	}
+
 	double absMax(int& _i, int& _j)
 	{
 		double max = -1;
@@ -199,10 +258,24 @@ public:
 		double** A = initializationA();
 		int iterator = 0;
 		int i, j;
+		double c, s;
 		double E = absMax(i, j);
 
 		while (iterator<M && e<E)
 		{
+			E = absMax(i, j);
+			calculationCS(i, j, c, s);
+			A = multiplicationLeftTijTransposed(A, c, s, i, j);
+			A = multiplicationRightTij(A, c, s, i, j);
+			T = multiplicationLeftTijTransposed(T, c, s, i, j);
+			iterator++;
+
 		}
+
+		K = iterator;
+		creatingVectorOfEigenvalues(A, a);
+		r = measureOfAccuracy(A, T);
+
+		return T;
 	}
 };
