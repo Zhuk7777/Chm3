@@ -18,6 +18,7 @@ int main()
 
 	double** diag = createDiag(5);
 	double* w = generateVector(5, 13, 5);
+	dividingVector(w, normOfVec(w, 5), 5);
 	double** H = createHouseholderMatrix(w, 5);
 	double** A = createMatrixForTest(H, diag, 5);
 
@@ -80,8 +81,7 @@ double normOfVec(double* vec,int size)
 void dividingVector(double* vec, double value, int size)
 {
 	for (int i = 0; i < size; i++)
-		for (int j = 0; j < size; j++)
-			vec[i] /= value;
+		vec[i] /= value;
 }
 
 double** createHouseholderMatrix(double* w, int size)
@@ -121,20 +121,23 @@ double** createMatrixForTest(double** H, double** diag, int size)
 		{
 			result[i][j] = 0;
 			for (int k = 0; k < size; k++)
-				result[i][j] += H[i][k] * diag[k][j];
+				if (k == j)
+					result[i][j] += H[i][k] * diag[k][j];
 		}
 
-	double sum;
+	double** result2 = new double* [size];
+	for (int i = 0; i < size; i++)
+		result2[i] = new double[size];
+
 	for (int i = 0; i < size; i++)
 		for (int j = 0; j < size; j++)
 		{
-			sum = 0;
+			result2[i][j] = 0;
 			for (int k = 0; k < size; k++)
-				sum += result[i][k] * diag[j][k];
-			result[i][j] = sum;
+				result2[i][j] += result[i][k] * H[j][k];
 		}
 
-	return result;
+	return result2;
 
 }
 
