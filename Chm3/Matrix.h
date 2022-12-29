@@ -36,22 +36,22 @@ class SymmetricMatrix
 	}
 
 
-	void calculationCS(int i, int j, double& c, double& s)
+	void calculationCS(double** A, int i, int j, double& c, double& s)
 	{
-		double p = 2 * elements[i][j];
-		double q = elements[i][i] - elements[j][j];
+		double p = 2.0 * A[i][j];
+		double q = A[i][i] - A[j][j];
 		double d = sqrt(p * p + q * q);
 
 		if (q == 0)
 		{
-			c = sqrt(2) / 2;
-			s = sqrt(2) / 2;
+			c = sqrt(2.0) / 2.0;
+			s = sqrt(2.0) / 2.0;
 		}
 		else
 		{
-			double r = abs(q) / (2 * d);
+			double r = abs(q) / (2.0 * d);
 			c = sqrt(0.5 + r);
-			s = sqrt(0.5 - r)*sign(p * q);
+			s = sqrt(0.5 - r) * sign(p * q);
 		}
 	}
 
@@ -100,7 +100,7 @@ class SymmetricMatrix
 		for (int l = 0; l < size; l++)
 		{
 			result[l][i] = c * matr[l][i] + s * matr[l][j];
-			result[l][j] = -s * matr[l][i] + c * matr[l][j];
+			result[l][j] = c * matr[l][j] - s * matr[l][i];
 		}
 
 		return result;
@@ -118,8 +118,9 @@ class SymmetricMatrix
 
 		for (int m = 0; m < size; m++)
 		{
+
 			result[i][m] = c * matr[i][m] + s * matr[j][m];
-			result[j][m] = -s * matr[i][m] + c * matr[j][m];
+			result[j][m] = c * matr[j][m] - s * matr[i][m];
 		}
 
 		return result;
@@ -184,14 +185,14 @@ class SymmetricMatrix
 		std::cout << "\n";
 	}
 
-	double absMax(double** matr, int& _i, int& _j)
+	double absMax(double** A, int& _i, int& _j)
 	{
 		double max = -1;
 		for (int i = 0; i < size; i++)
-			for (int j = 0; j < size; j++)
-				if (i!=j&&abs(matr[i][j]) > max)
+			for (int j = 0; j < i; j++)
+				if (abs(A[i][j]) > max)
 				{
-					max = abs(matr[i][j]);
+					max = abs(A[i][j]);
 					_i = i;
 					_j = j;
 				}
@@ -278,16 +279,18 @@ public:
 	double** eigenvectors(double e, int M, int& K, double* a, double& r)
 	{
 		double** T = initializationT0();
+		//print(T);
 		double** A = initializationA();
+		//print(A);
 		int iterator = 0;
 		int i, j;
 		double c, s;
 		double E = absMax(A, i, j);
 
-		while (iterator<M && e<E)
+		while (e < E && iterator < M)
 		{
 			E = absMax(A, i, j);
-			calculationCS(i, j, c, s);
+			calculationCS(A, i, j, c, s);
 			A = multiplicationLeftTijTransposed(A, c, s, i, j);
 			//print(A);
 			A = multiplicationRightTij(A, c, s, i, j);

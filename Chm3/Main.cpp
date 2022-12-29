@@ -22,8 +22,8 @@ int main()
 	double** H = createHouseholderMatrix(w, 5);
 	double** A = createMatrixForTest(H, diag, 5);
 
-	printMatrix(H, 5);
 	printMatrix(A, 5);
+	printMatrix(H, 5);
 	printMatrix(diag, 5);
 
 	SymmetricMatrix matr(A, 5);
@@ -40,6 +40,7 @@ int main()
 	std::cin >> e;
 
 	double** T = matr.eigenvectors(e, M, countSpins, eigenvalues, r);
+
 	printMatrix(T, 5);
 	for (int i = 0; i < 5; i++)
 		std::cout << eigenvalues[i] << " ";
