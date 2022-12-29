@@ -40,18 +40,23 @@ int main()
 	std::cin >> e;
 
 	double** T = matr.eigenvectors(e, M, countSpins, eigenvalues, r);
-
+	std::cout << "матрица, в столбцах которой расположены собственные векторы исходной матрицы\n";
 	printMatrix(T, 5);
+	std::cout << "\n";
+
+	std::cout << "вектор собственных значений\n";
 	for (int i = 0; i < 5; i++)
 		std::cout << eigenvalues[i] << " ";
-	std::cout << "\n" << r << "\n" << countSpins;
+	std::cout << "\n";
+
+	std::cout << "количество выполненных вращений\n";
+	std::cout << countSpins << "\n";
+
+	std::cout << "мера точности определения собственных значений и собственных векторов\n";
+	std::cout << r << "\n";
 
 
 	return 0;
-
-
-
-
 }
 
 double* generateVector(int size, double max, double min) {
